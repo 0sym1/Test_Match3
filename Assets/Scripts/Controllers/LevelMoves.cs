@@ -10,13 +10,17 @@ public class LevelMoves : LevelCondition
 
     private BoardController m_board;
 
-    public override void Setup(float value, Text txt, BoardController board)
+    private CellCollectedController m_cellCollectedController;
+
+    public override void Setup(float value, Text txt, BoardController board, CellCollectedController cellCollectedController)
     {
         base.Setup(value, txt);
-
-        m_moves = (int)value;
+ 
+        m_moves = 0;
 
         m_board = board;
+
+        m_cellCollectedController = cellCollectedController;
 
         m_board.OnMoveEvent += OnMove;
 
@@ -27,13 +31,17 @@ public class LevelMoves : LevelCondition
     {
         if (m_conditionCompleted) return;
 
-        m_moves--;
+        m_moves++;
 
         UpdateText();
 
-        if(m_moves <= 0)
+        if(m_cellCollectedController.CheckGameOver())
         {
             OnConditionComplete();
+        }
+        else
+        {
+            EvenManager.InvokeCheckGameWin();
         }
     }
 

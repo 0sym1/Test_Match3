@@ -9,7 +9,11 @@ public class Item
 {
     public Cell Cell { get; private set; }
 
+    public Cell OriginalCell { get; set; }
+
     public Transform View { get; private set; }
+
+    public bool IsSelected { get; set; }
 
 
     public virtual void SetView()
@@ -37,7 +41,7 @@ public class Item
     {
         if (View == null) return;
 
-        View.DOMove(Cell.transform.position, 0.2f);
+        View.DOMove(Cell.transform.position, 0.3f);
     }
 
     public void SetViewPosition(Vector3 pos)
@@ -98,13 +102,16 @@ public class Item
     {
         if (View)
         {
-            View.DOScale(0.1f, 0.1f).OnComplete(
-                () =>
-                {
-                    GameObject.Destroy(View.gameObject);
-                    View = null;
-                }
-                );
+            DOVirtual.DelayedCall(0.1f, () => 
+            {
+                View.DOScale(0.1f, 0.1f).OnComplete(
+                    () =>
+                    {
+                        GameObject.Destroy(View.gameObject);
+                        View = null;
+                    }
+                    );
+            });
         }
     }
 
